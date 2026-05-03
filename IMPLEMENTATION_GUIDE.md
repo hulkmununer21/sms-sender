@@ -2,7 +2,7 @@
 
 A robust, production-ready SMS Sender web application built with modern technologies and security best practices.
 
-## Architecture Overview
+### Architecture Overview
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
