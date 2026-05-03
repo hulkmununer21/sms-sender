@@ -1,4 +1,3 @@
-import React from "react";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { ContactList } from "./components/ContactList";
 import { LogOut } from "lucide-react";
