@@ -10,7 +10,9 @@ if (!supabaseUrl || !supabaseAnonKey) {
   );
 }
 
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey);
+// Create client - type inference handled in hooks with explicit casts
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // Export types for use throughout the app
 export type { User } from "@supabase/supabase-js";
+export type { Database } from "../types/database";

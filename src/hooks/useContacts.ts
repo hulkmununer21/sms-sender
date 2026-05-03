@@ -34,10 +34,12 @@ export const useContacts = (): UseContactsReturn => {
       setLoading(true);
       setError(null);
 
-      const { data, error: fetchError } = await supabase
-        .from("contacts")
-        .select("*")
-        .order("created_at", { ascending: false });
+      const { data, error: fetchError } = await (
+        supabase
+          .from("contacts")
+          .select("*")
+          .order("created_at", { ascending: false }) as Promise<any>
+      );
 
       if (fetchError) throw fetchError;
       setContacts(data || []);
@@ -62,11 +64,13 @@ export const useContacts = (): UseContactsReturn => {
     try {
       setError(null);
 
-      const { data, error: insertError } = await supabase
-        .from("contacts")
-        .insert([contact])
-        .select()
-        .single();
+      const { data, error: insertError } = await (
+        supabase
+          .from("contacts")
+          .insert([contact as any])
+          .select()
+          .single() as Promise<any>
+      );
 
       if (insertError) throw insertError;
 
