@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
-import { Database } from "../types/database";
+import type { Database } from "../types/database";
 import { useAuth } from "../context/AuthContext";
 
 type Contact = Database["public"]["Tables"]["contacts"]["Row"];
+type ContactInsertType = Database["public"]["Tables"]["contacts"]["Insert"];
 
 interface UseContactsReturn {
   contacts: Contact[];
   loading: boolean;
   error: Error | null;
   addContact: (
-    contact: Database["public"]["Tables"]["contacts"]["Insert"]
+    contact: ContactInsertType
   ) => Promise<Contact | null>;
   deleteContact: (id: string) => Promise<void>;
   refetch: () => Promise<void>;
@@ -56,7 +57,7 @@ export const useContacts = (): UseContactsReturn => {
   }, [user, authLoading]);
 
   const addContact = async (
-    contact: Database["public"]["Tables"]["contacts"]["Insert"]
+    contact: ContactInsertType
   ): Promise<Contact | null> => {
     try {
       setError(null);
