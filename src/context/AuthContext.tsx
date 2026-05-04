@@ -7,7 +7,6 @@ interface AuthContextType {
   session: Session | null;
   loading: boolean;
   error: Error | null;
-  signUp: (email: string, password: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
 }
@@ -58,21 +57,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     };
   }, []);
 
-  const signUp = async (email: string, password: string) => {
-    try {
-      setError(null);
-      const { error: signUpError } = await supabase.auth.signUp({
-        email,
-        password,
-      });
-
-      if (signUpError) throw signUpError;
-    } catch (err) {
-      const error = err instanceof Error ? err : new Error(String(err));
-      setError(error);
-      throw error;
-    }
-  };
 
   const signIn = async (email: string, password: string) => {
     try {
@@ -109,7 +93,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         session,
         loading,
         error,
-        signUp,
         signIn,
         signOut,
       }}

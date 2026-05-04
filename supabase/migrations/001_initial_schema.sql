@@ -4,9 +4,31 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- Create users_metadata table to track user info (optional, for future use)
 CREATE TABLE IF NOT EXISTS public.users_metadata (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  full_name VARCHAR(255),
+  phone VARCHAR(20),
+  company VARCHAR(255),
+  timezone VARCHAR(50) DEFAULT 'UTC',
+  language VARCHAR(10) DEFAULT 'en',
+  api_quota_monthly INTEGER DEFAULT 10000,
+  api_quota_remaining INTEGER DEFAULT 10000,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
+
+-- Enable RLS on users_metadata
+ALTER TABLE public.users_metadata ENABLE ROW LEVEL SECURITY;
+
+-- RLS Policies for users_metadata
+CREATE POLICY "Users can view their own metadata"
+ON public.users_metadata
+FOR SELECT
+USING (auth.uid() = id);
+
+CREATE POLICY "Users can update their own metadata"
+ON public.users_metadata
+FOR UPDATE
+USING (auth.uid() = id)
+WITH CHECK (auth.uid() = id);
 
 -- Create contacts table
 CREATE TABLE IF NOT EXISTS public.contacts (

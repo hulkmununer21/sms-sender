@@ -1,31 +1,20 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { Mail, Lock, AlertCircle, Loader } from "lucide-react";
-
-type AuthMode = "signin" | "signup";
+import { Mail, Lock, AlertCircle, Loader, ShieldAlert } from "lucide-react";
 
 export const AuthForm: React.FC = () => {
-  const { signIn, signUp, error, loading } = useAuth();
-  const [mode, setMode] = useState<AuthMode>("signin");
+  const { signIn, error, loading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [localError, setLocalError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLocalError(null);
-    setSuccessMessage("");
 
     // Validation
     if (!email || !password) {
       setLocalError("Email and password are required");
-      return;
-    }
-
-    if (mode === "signup" && password !== confirmPassword) {
-      setLocalError("Passwords do not match");
       return;
     }
 
@@ -35,19 +24,7 @@ export const AuthForm: React.FC = () => {
     }
 
     try {
-      if (mode === "signin") {
-        await signIn(email, password);
-      } else {
-        await signUp(email, password);
-        setSuccessMessage(
-          "Account created! Check your email to confirm your account."
-        );
-        // Reset form
-        setEmail("");
-        setPassword("");
-        setConfirmPassword("");
-        setTimeout(() => setMode("signin"), 3000);
-      }
+      await signIn(email, password);
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Authentication failed";
@@ -63,11 +40,7 @@ export const AuthForm: React.FC = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900">SMS Sender</h1>
-          <p className="text-gray-600 mt-2">
-            {mode === "signin"
-              ? "Sign in to your account"
-              : "Create a new account"}
-          </p>
+          <p className="text-gray-600 mt-2">Sign in to your account</p>
         </div>
 
         {/* Error Message */}
@@ -81,12 +54,16 @@ export const AuthForm: React.FC = () => {
           </div>
         )}
 
-        {/* Success Message */}
-        {successMessage && (
-          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-            <p className="text-sm font-medium text-green-900">{successMessage}</p>
+        {/* Info Banner */}
+        <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg flex items-start gap-3">
+          <ShieldAlert className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-medium text-blue-900">Authorized Users Only</p>
+            <p className="text-xs text-blue-700 mt-1">
+              Contact your administrator to request login credentials. Each account has isolated access to its own data.
+            </p>
           </div>
-        )}
+        </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -134,37 +111,7 @@ export const AuthForm: React.FC = () => {
                 required
               />
             </div>
-            {mode === "signup" && (
-              <p className="text-xs text-gray-500 mt-1">
-                Minimum 6 characters
-              </p>
-            )}
           </div>
-
-          {/* Confirm Password Field (Sign Up Only) */}
-          {mode === "signup" && (
-            <div>
-              <label
-                htmlFor="confirmPassword"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Confirm Password
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                <input
-                  type="password"
-                  id="confirmPassword"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                  disabled={loading}
-                  required
-                />
-              </div>
-            </div>
-          )}
 
           {/* Submit Button */}
           <button
@@ -175,37 +122,20 @@ export const AuthForm: React.FC = () => {
             {loading ? (
               <>
                 <Loader className="h-4 w-4 animate-spin" />
-                {mode === "signin" ? "Signing in..." : "Creating account..."}
+                Signing in...
               </>
             ) : (
-              <>{mode === "signin" ? "Sign In" : "Create Account"}</>
+              <>Sign In</>
             )}
           </button>
         </form>
 
-        {/* Toggle Mode */}
-        <div className="mt-6 text-center">
-          <p className="text-gray-600 text-sm">
-            {mode === "signin"
-              ? "Don't have an account? "
-              : "Already have an account? "}
-            <button
-              type="button"
-              onClick={() => {
-                setMode(mode === "signin" ? "signup" : "signin");
-                setLocalError(null);
-                setSuccessMessage("");
-              }}
-              className="text-blue-600 hover:text-blue-700 font-medium transition"
-            >
-              {mode === "signin" ? "Sign Up" : "Sign In"}
-            </button>
-          </p>
-        </div>
-
         {/* Footer */}
         <div className="mt-8 pt-6 border-t border-gray-200">
           <p className="text-center text-xs text-gray-500">
+            All user data and activities are completely segregated and isolated per account.
+          </p>
+          <p className="text-center text-xs text-gray-500 mt-2">
             By signing in, you agree to our Terms of Service and Privacy Policy
           </p>
         </div>
