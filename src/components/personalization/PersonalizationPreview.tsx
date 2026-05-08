@@ -71,10 +71,10 @@ export const PersonalizationPreview: React.FC<PersonalizationPreviewProps> = ({
   );
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-purple-50 sticky top-0 z-10">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 animate-fade-in">
+      <div className="bg-white rounded-xl shadow-2xl max-w-3xl w-full max-h-[80vh] flex flex-col animate-slide-up">
+        {/* Header - Sticky */}
+        <div className="border-b border-gray-200 px-6 py-4 flex-shrink-0">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
               <MessageCircle className="h-5 w-5 text-blue-600" />
@@ -83,50 +83,48 @@ export const PersonalizationPreview: React.FC<PersonalizationPreviewProps> = ({
             <button
               onClick={onReject}
               disabled={loading}
-              className="text-gray-500 hover:text-gray-700 disabled:opacity-50"
+              className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg p-1 transition disabled:opacity-50"
             >
-              <X className="h-5 w-5" />
+              <X className="h-6 w-6" />
             </button>
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-4 gap-3">
-            <div className="bg-white rounded-lg p-3 border border-gray-200">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
+            <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
               <p className="text-xs text-gray-600">Total Messages</p>
-              <p className="text-lg font-bold text-gray-900">{messages.length}</p>
+              <p className="text-lg font-bold text-gray-900 mt-1">{messages.length}</p>
             </div>
-            <div className="bg-white rounded-lg p-3 border border-gray-200">
+            <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
               <p className="text-xs text-gray-600">Avg Length</p>
-              <p className="text-lg font-bold text-gray-900">{avgLength}</p>
+              <p className="text-lg font-bold text-gray-900 mt-1">{avgLength}</p>
             </div>
-            <div className="bg-white rounded-lg p-3 border border-blue-200 bg-blue-50">
+            <div className="bg-blue-50 rounded-lg p-3 border border-blue-200">
               <p className="text-xs text-blue-600">Total Tokens</p>
-              <p className="text-lg font-bold text-blue-900">{totalTokens}</p>
+              <p className="text-lg font-bold text-blue-900 mt-1">{totalTokens}</p>
             </div>
-            <div className="bg-white rounded-lg p-3 border border-purple-200 bg-purple-50">
+            <div className="bg-purple-50 rounded-lg p-3 border border-purple-200">
               <p className="text-xs text-purple-600">Estimated Cost</p>
-              <p className="text-lg font-bold text-purple-900">
-                ${(totalCost / 100).toFixed(4)}
-              </p>
+              <p className="text-lg font-bold text-purple-900 mt-1">${(totalCost / 100).toFixed(4)}</p>
             </div>
           </div>
         </div>
 
         {/* Search */}
-        <div className="p-4 border-b border-gray-200 bg-gray-50 sticky top-[180px] z-10">
+        <div className="border-b border-gray-200 px-6 py-3 bg-gray-50 flex-shrink-0">
           <input
             type="text"
-            placeholder="Search by name or message content..."
+            placeholder="Search by name or message..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
 
-        {/* Messages */}
-        <div className="p-6 space-y-3">
+        {/* Scrollable Messages */}
+        <div className="overflow-y-auto flex-1 px-6 py-4 space-y-3">
           {filteredMessages.length === 0 ? (
-            <div className="text-center py-8">
+            <div className="text-center py-12">
               <p className="text-gray-500">No messages match your search</p>
             </div>
           ) : (
@@ -134,7 +132,7 @@ export const PersonalizationPreview: React.FC<PersonalizationPreviewProps> = ({
               {filteredMessages.map((msg, index) => (
                 <div
                   key={msg.contactId}
-                  className="border border-gray-200 rounded-lg p-4 hover:border-blue-300 transition"
+                  className="border border-gray-200 rounded-lg p-4 hover:border-blue-300 hover:shadow-sm transition"
                 >
                   <div
                     className="flex items-start justify-between cursor-pointer"
@@ -164,7 +162,7 @@ export const PersonalizationPreview: React.FC<PersonalizationPreviewProps> = ({
                           e.stopPropagation();
                           handleCopy(msg.personalized, msg.contactId);
                         }}
-                        className="p-2 text-gray-600 hover:text-blue-600 transition"
+                        className="p-2 text-gray-600 hover:text-blue-600 transition rounded"
                         title="Copy"
                       >
                         {copiedId === msg.contactId ? (
@@ -186,9 +184,7 @@ export const PersonalizationPreview: React.FC<PersonalizationPreviewProps> = ({
                   {expandedId === msg.contactId && (
                     <div className="mt-4 pt-4 border-t border-gray-200 space-y-3">
                       <div>
-                        <label className="text-xs font-medium text-gray-700">
-                          Full Message
-                        </label>
+                        <label className="text-xs font-medium text-gray-700">Full Message</label>
                         <div className="mt-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
                           <p className="text-sm text-blue-900 leading-relaxed">
                             {msg.personalized}
@@ -197,9 +193,7 @@ export const PersonalizationPreview: React.FC<PersonalizationPreviewProps> = ({
                       </div>
 
                       <div>
-                        <label className="text-xs font-medium text-gray-700">
-                          Variables Used
-                        </label>
+                        <label className="text-xs font-medium text-gray-700">Variables Used</label>
                         <div className="mt-2 flex flex-wrap gap-2">
                           {msg.variables && Object.entries(msg.variables)
                             .filter(([, v]) => v !== undefined && v !== null)
@@ -208,9 +202,7 @@ export const PersonalizationPreview: React.FC<PersonalizationPreviewProps> = ({
                                 key={key}
                                 className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 rounded text-xs text-gray-700 border border-gray-200"
                               >
-                                <code className="font-mono text-xs font-medium">
-                                  {key}
-                                </code>
+                                <code className="font-mono text-xs font-medium">{key}</code>
                                 <span>=</span>
                                 <span className="font-medium">{String(value)}</span>
                               </span>
@@ -221,15 +213,11 @@ export const PersonalizationPreview: React.FC<PersonalizationPreviewProps> = ({
                       <div className="grid grid-cols-3 gap-2 p-3 bg-gray-50 rounded-lg border border-gray-200">
                         <div>
                           <p className="text-xs text-gray-600">Length</p>
-                          <p className="text-sm font-semibold text-gray-900">
-                            {msg.personalized.length}
-                          </p>
+                          <p className="text-sm font-semibold text-gray-900">{msg.personalized.length}</p>
                         </div>
                         <div>
                           <p className="text-xs text-gray-600">Tokens</p>
-                          <p className="text-sm font-semibold text-gray-900">
-                            {msg.tokens || 0}
-                          </p>
+                          <p className="text-sm font-semibold text-gray-900">{msg.tokens || 0}</p>
                         </div>
                         <div>
                           <p className="text-xs text-gray-600">Cost</p>
@@ -247,7 +235,7 @@ export const PersonalizationPreview: React.FC<PersonalizationPreviewProps> = ({
               {!showAll && hiddenCount > 0 && (
                 <button
                   onClick={() => setShowAll(true)}
-                  className="w-full py-2 text-sm font-medium text-blue-600 hover:text-blue-700 border border-blue-200 rounded-lg transition"
+                  className="w-full py-2 text-sm font-medium text-blue-600 hover:text-blue-700 border border-blue-200 rounded-lg hover:bg-blue-50 transition"
                 >
                   Show {hiddenCount} more messages
                 </button>
@@ -256,12 +244,12 @@ export const PersonalizationPreview: React.FC<PersonalizationPreviewProps> = ({
           )}
         </div>
 
-        {/* Footer */}
-        <div className="p-6 border-t border-gray-200 bg-gray-50 flex gap-3 sticky bottom-0">
+        {/* Footer - Sticky */}
+        <div className="border-t border-gray-200 px-6 py-4 flex gap-3 flex-shrink-0 bg-gray-50">
           <button
             onClick={onReject}
             disabled={loading}
-            className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium disabled:opacity-50"
+            className="flex-1 px-4 py-2.5 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition font-medium disabled:opacity-50"
           >
             Reject
           </button>
@@ -269,7 +257,7 @@ export const PersonalizationPreview: React.FC<PersonalizationPreviewProps> = ({
             <button
               onClick={() => onCustomize(messages)}
               disabled={loading}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition font-medium disabled:opacity-50"
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition font-medium disabled:opacity-50"
             >
               <Edit2 className="h-4 w-4" />
               Customize
@@ -278,7 +266,7 @@ export const PersonalizationPreview: React.FC<PersonalizationPreviewProps> = ({
           <button
             onClick={onAccept}
             disabled={loading}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium disabled:opacity-50"
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium disabled:opacity-50"
           >
             {loading ? (
               <>

@@ -144,23 +144,32 @@ export function extractPersonalizationVariables(
 /**
  * Replace template variables in a message
  * Supports: {{variable_name}}
+ * Only replaces variables that are explicitly in the template
+ * Unreplaced variables are kept as {{variable}} or removed based on removeUnreplaced param
  */
 export function substituteTemplateVariables(
   template: string,
-  variables: PersonalizationVariables
+  variables: PersonalizationVariables,
+  removeUnreplaced: boolean = true
 ): string {
   let result = template;
 
-  // Replace each variable in the template
-  Object.entries(variables).forEach(([key, value]) => {
+  // Get all variables used in the template
+  const usedVariables = getTemplateVariables(template);
+
+  // Only replace variables that are actually used in the template
+  usedVariables.forEach((varName) => {
+    const value = variables[varName as keyof PersonalizationVariables];
     if (value !== undefined && value !== null) {
-      const regex = new RegExp(`{{${key}}}`, "gi");
+      const regex = new RegExp(`{{${varName}}}`, "gi");
       result = result.replace(regex, String(value));
     }
   });
 
-  // Remove unreplaced variables to avoid showing {{variable}} in output
-  result = result.replace(/{{[^}]+}}/g, "");
+  // Only remove unreplaced variables if explicitly requested
+  if (removeUnreplaced) {
+    result = result.replace(/{{[^}]+}}/g, "");
+  }
 
   return result;
 }
