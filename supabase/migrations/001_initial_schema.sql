@@ -183,3 +183,137 @@ USING (
     WHERE user_id = auth.uid()
   )
 );
+
+-- Create message_logs table for tracking SMS delivery
+CREATE TABLE IF NOT EXISTS public.message_logs (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  campaign_id UUID NOT NULL REFERENCES public.campaigns(id) ON DELETE CASCADE,
+  contact_id UUID NOT NULL REFERENCES public.contacts(id) ON DELETE CASCADE,
+  recipient_name VARCHAR(255),
+  phone_number VARCHAR(20) NOT NULL,
+  message_text TEXT NOT NULL,
+  status VARCHAR(50) DEFAULT 'pending', -- pending, sent, delivered, failed
+  error_message TEXT,
+  sent_at TIMESTAMP WITH TIME ZONE,
+  delivered_at TIMESTAMP WITH TIME ZONE,
+  provider_message_id VARCHAR(255),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Create indexes for message_logs
+CREATE INDEX IF NOT EXISTS idx_message_logs_user_id ON public.message_logs(user_id);
+CREATE INDEX IF NOT EXISTS idx_message_logs_campaign_id ON public.message_logs(campaign_id);
+CREATE INDEX IF NOT EXISTS idx_message_logs_contact_id ON public.message_logs(contact_id);
+CREATE INDEX IF NOT EXISTS idx_message_logs_status ON public.message_logs(status);
+CREATE INDEX IF NOT EXISTS idx_message_logs_created_at ON public.message_logs(created_at DESC);
+
+-- Enable RLS on message_logs
+ALTER TABLE public.message_logs ENABLE ROW LEVEL SECURITY;
+
+-- RLS Policies for message_logs table
+-- Allow users to SELECT only their own message logs
+CREATE POLICY "Users can view their own message logs"
+ON public.message_logs
+FOR SELECT
+USING (auth.uid() = user_id);
+
+-- Allow users to INSERT message logs for themselves
+CREATE POLICY "Users can insert message logs"
+ON public.message_logs
+FOR INSERT
+WITH CHECK (auth.uid() = user_id);
+
+-- Allow users to UPDATE only their own message logs
+CREATE POLICY "Users can update their own message logs"
+ON public.message_logs
+FOR UPDATE
+USING (auth.uid() = user_id)
+WITH CHECK (auth.uid() = user_id);
+
+-- Allow users to DELETE only their own message logs
+CREATE POLICY "Users can delete their own message logs"
+ON public.message_logs
+FOR DELETE
+USING (auth.uid() = user_id);
+
+-- Create message_variations table for AI enhancements
+CREATE TABLE IF NOT EXISTS public.message_variations (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  campaign_id UUID NOT NULL REFERENCES public.campaigns(id) ON DELETE CASCADE,
+  original_message TEXT NOT NULL,
+  enhanced_message TEXT NOT NULL,
+  enhancement_type VARCHAR(50) NOT NULL, -- personalize, tone, summarize, clarity, translate
+  enhancement_params JSONB, -- Store params like tone='casual', language='es'
+  ai_model VARCHAR(50) DEFAULT 'gpt-5-nano',
+  prompt_tokens INTEGER,
+  completion_tokens INTEGER,
+  total_tokens INTEGER,
+  cost_cents DECIMAL(10, 4),
+  status VARCHAR(50) DEFAULT 'success', -- success, failed, rate_limited
+  error_message TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Create indexes for message_variations
+CREATE INDEX IF NOT EXISTS idx_message_variations_user_id ON public.message_variations(user_id);
+CREATE INDEX IF NOT EXISTS idx_message_variations_campaign_id ON public.message_variations(campaign_id);
+CREATE INDEX IF NOT EXISTS idx_message_variations_enhancement_type ON public.message_variations(enhancement_type);
+CREATE INDEX IF NOT EXISTS idx_message_variations_created_at ON public.message_variations(created_at DESC);
+
+-- Enable RLS on message_variations
+ALTER TABLE public.message_variations ENABLE ROW LEVEL SECURITY;
+
+-- RLS Policies for message_variations table
+-- Allow users to SELECT only their own variations
+CREATE POLICY "Users can view their own message variations"
+ON public.message_variations
+FOR SELECT
+USING (auth.uid() = user_id);
+
+-- Allow users to INSERT variations for their campaigns
+CREATE POLICY "Users can insert message variations"
+ON public.message_variations
+FOR INSERT
+WITH CHECK (auth.uid() = user_id);
+
+-- Allow users to UPDATE only their own variations
+CREATE POLICY "Users can update their own message variations"
+ON public.message_variations
+FOR UPDATE
+USING (auth.uid() = user_id)
+WITH CHECK (auth.uid() = user_id);
+
+-- Allow users to DELETE only their own variations
+CREATE POLICY "Users can delete their own message variations"
+ON public.message_variations
+FOR DELETE
+USING (auth.uid() = user_id);
+
+-- Create ai_usage_tracking table for analytics and cost tracking
+CREATE TABLE IF NOT EXISTS public.ai_usage_tracking (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  enhancement_type VARCHAR(50) NOT NULL,
+  ai_model VARCHAR(50) NOT NULL,
+  total_tokens INTEGER NOT NULL,
+  cost_cents DECIMAL(10, 4) NOT NULL,
+  status VARCHAR(50) DEFAULT 'success', -- success, failed, rate_limited
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Create indexes for ai_usage_tracking
+CREATE INDEX IF NOT EXISTS idx_ai_usage_user_id ON public.ai_usage_tracking(user_id);
+CREATE INDEX IF NOT EXISTS idx_ai_usage_created_at ON public.ai_usage_tracking(created_at DESC);
+
+-- Enable RLS on ai_usage_tracking
+ALTER TABLE public.ai_usage_tracking ENABLE ROW LEVEL SECURITY;
+
+-- RLS Policies for ai_usage_tracking
+CREATE POLICY "Users can view their own usage"
+ON public.ai_usage_tracking
+FOR SELECT
+USING (auth.uid() = user_id);

@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { supabase } from "../lib/supabase";
+import { useAuth } from "../context/AuthContext";
 import { Database } from "../types/database";
 
 type Campaign = Database["public"]["Tables"]["campaigns"]["Row"];
@@ -13,18 +14,26 @@ interface CampaignStats {
 }
 
 export const useCampaigns = () => {
+  const { user, loading: authLoading } = useAuth();
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Fetch all campaigns
   const fetchCampaigns = useCallback(async () => {
+    if (!user) {
+      setCampaigns([]);
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     setError(null);
     try {
       const { data, error: err } = await supabase
         .from("campaigns")
         .select("*")
+        .eq("user_id", user.id)
         .order("created_at", { ascending: false }) as any;
 
       if (err) throw err;
@@ -35,16 +44,20 @@ export const useCampaigns = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [user]);
 
   // Create campaign
   const createCampaign = useCallback(
     async (campaign: CampaignInsert) => {
+      if (!user) {
+        throw new Error("You must be logged in to create a campaign");
+      }
+
       setError(null);
       try {
         const { data, error: err } = await supabase
           .from("campaigns")
-          .insert([campaign])
+          .insert([{ ...campaign, user_id: user.id }])
           .select()
           .single() as any;
 
@@ -57,7 +70,7 @@ export const useCampaigns = () => {
         throw err;
       }
     },
-    []
+    [user]
   );
 
   // Update campaign
@@ -112,8 +125,10 @@ export const useCampaigns = () => {
   }, [campaigns]);
 
   useEffect(() => {
-    fetchCampaigns();
-  }, [fetchCampaigns]);
+    if (!authLoading) {
+      fetchCampaigns();
+    }
+  }, [user, authLoading, fetchCampaigns]);
 
   return {
     campaigns,

@@ -11,26 +11,34 @@ interface ErrorAlertProps {
   dismissible?: boolean;
 }
 
-const typeStyles: Record<AlertType, { bg: string; border: string; icon: React.FC<any> }> = {
+const typeStyles: Record<AlertType, { bg: string; border: string; icon: React.FC<any>; color: string; textColor: string }> = {
   error: {
-    bg: "bg-red-50",
-    border: "border-red-200",
+    bg: "bg-matrix-dark",
+    border: "border-matrix-neon-pink",
     icon: AlertCircle,
+    color: "text-matrix-neon-pink",
+    textColor: "text-matrix-neon-pink",
   },
   success: {
-    bg: "bg-green-50",
-    border: "border-green-200",
+    bg: "bg-matrix-dark",
+    border: "border-matrix-neon-green",
     icon: CheckCircle,
+    color: "text-matrix-neon-green",
+    textColor: "text-matrix-neon-green",
   },
   info: {
-    bg: "bg-blue-50",
-    border: "border-blue-200",
+    bg: "bg-matrix-dark",
+    border: "border-matrix-neon-cyan",
     icon: InfoIcon,
+    color: "text-matrix-neon-cyan",
+    textColor: "text-matrix-neon-cyan",
   },
   warning: {
-    bg: "bg-yellow-50",
-    border: "border-yellow-200",
+    bg: "bg-matrix-dark",
+    border: "border-matrix-neon-yellow",
     icon: AlertTriangle,
+    color: "text-matrix-neon-yellow",
+    textColor: "text-matrix-neon-yellow",
   },
 };
 
@@ -44,26 +52,20 @@ export const ErrorAlert: React.FC<ErrorAlertProps> = ({
   const style = typeStyles[type];
   const Icon = style.icon;
 
-  const textColors: Record<AlertType, string> = {
-    error: "text-red-800",
-    success: "text-green-800",
-    info: "text-blue-800",
-    warning: "text-yellow-800",
-  };
-
   return (
     <div
-      className={`${style.bg} border ${style.border} rounded-lg p-4 flex items-start gap-3 ${textColors[type]}`}
+      className={`${style.bg} border-2 ${style.border} rounded-sm p-4 flex items-start gap-3 ${style.textColor}`}
+      style={{ boxShadow: `inset 0 0 10px ${type === 'error' ? 'rgba(255, 0, 110, 0.2)' : type === 'success' ? 'rgba(0, 255, 65, 0.2)' : type === 'info' ? 'rgba(0, 217, 255, 0.2)' : 'rgba(255, 190, 11, 0.2)'}` }}
     >
       <Icon className="h-5 w-5 flex-shrink-0 mt-0.5" />
       <div className="flex-1">
-        <p className="font-medium">{title}</p>
-        {message && <p className="text-sm mt-1 opacity-90">{message}</p>}
+        <p className="font-bold font-mono">&gt; {title}</p>
+        {message && <p className="text-sm mt-1 opacity-90 font-mono">&gt; {message}</p>}
       </div>
       {dismissible && onClose && (
         <button
           onClick={onClose}
-          className="text-current opacity-50 hover:opacity-100 transition flex-shrink-0"
+          className={`${style.color} opacity-50 hover:opacity-100 transition flex-shrink-0`}
         >
           <X className="h-4 w-4" />
         </button>

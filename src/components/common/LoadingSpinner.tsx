@@ -17,16 +17,17 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
 }) => {
   const spinner = (
     <div
-      className={`animate-spin rounded-full border-b-2 border-blue-600 ${sizeVariants[size]}`}
+      className={`animate-spin rounded-full border-2 border-matrix-neon-green border-t-matrix-neon-cyan ${sizeVariants[size]}`}
+      style={{ boxShadow: '0 0 20px rgba(0, 255, 65, 0.5)' }}
     ></div>
   );
 
   if (fullScreen) {
     return (
-      <div className="h-screen flex items-center justify-center bg-gray-50">
+      <div className="h-screen flex items-center justify-center bg-matrix-black">
         <div className="text-center">
           {spinner}
-          <p className="text-gray-600 mt-4">Loading...</p>
+          <p className="text-matrix-neon-cyan mt-4 font-mono text-sm">&gt; LOADING NEURAL NETWORK...</p>
         </div>
       </div>
     );

@@ -12,48 +12,52 @@ export const TopNavBar: React.FC = () => {
   };
 
   return (
-    <nav className="bg-white shadow-sm border-b border-gray-200">
+    <nav className="bg-matrix-dark border-b-2 border-matrix-neon-green shadow-matrix">
       <div className="max-w-full mx-auto px-6 py-4 flex items-center justify-between">
         {/* Left side */}
         <div className="flex items-center gap-4">
-          <h1 className="text-2xl font-bold text-gray-900">SMS Sender</h1>
+          <h1 className="matrix-title text-2xl">
+            ◈ SMS NEXUS ◈
+          </h1>
         </div>
 
         {/* Right side */}
         <div className="flex items-center gap-6">
           {/* Notifications */}
-          <button className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition">
+          <button className="relative p-2 text-matrix-neon-cyan hover:text-matrix-neon-green transition duration-200 hover:bg-matrix-black rounded-sm">
             <Bell className="h-5 w-5" />
-            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+            <span className="absolute top-1 right-1 w-2 h-2 bg-matrix-neon-pink rounded-full animate-pulse"></span>
           </button>
 
           {/* User Menu */}
           <div className="relative">
             <button
               onClick={() => setShowUserMenu(!showUserMenu)}
-              className="flex items-center gap-2 p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition"
+              className="flex items-center gap-2 p-2 text-matrix-neon-cyan hover:text-matrix-neon-green transition duration-200 hover:bg-matrix-black rounded-sm"
             >
               <User className="h-5 w-5" />
-              <span className="text-sm font-medium hidden md:block max-w-xs truncate">
+              <span className="text-sm font-bold hidden md:block max-w-xs truncate text-matrix-neon-green">
                 {user?.email}
               </span>
             </button>
 
             {/* Dropdown Menu */}
             {showUserMenu && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200">
-                <div className="p-4 border-b border-gray-200">
-                  <p className="text-sm text-gray-600">Signed in as</p>
-                  <p className="text-sm font-medium text-gray-900 truncate">
+              <div className="absolute right-0 mt-2 w-56 card-matrix-cyan">
+                <div className="p-4 border-b-2 border-matrix-neon-cyan">
+                  <p className="text-xs text-matrix-neon-cyan font-bold">
+                    &gt; LOGGED IN AS
+                  </p>
+                  <p className="text-sm font-bold text-matrix-neon-green truncate mt-1">
                     {user?.email}
                   </p>
                 </div>
                 <button
                   onClick={handleSignOut}
-                  className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 transition"
+                  className="w-full text-left px-4 py-2 text-sm text-matrix-neon-pink hover:text-matrix-neon-yellow hover:bg-matrix-dark flex items-center gap-2 transition duration-200 font-bold"
                 >
                   <LogOut className="h-4 w-4" />
-                  Sign Out
+                  ◈ DISCONNECT
                 </button>
               </div>
             )}

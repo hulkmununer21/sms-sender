@@ -13,10 +13,10 @@ interface StatsCardProps {
 }
 
 const colorVariants = {
-  blue: "bg-blue-50 text-blue-600",
-  green: "bg-green-50 text-green-600",
-  purple: "bg-purple-50 text-purple-600",
-  orange: "bg-orange-50 text-orange-600",
+  blue: "bg-matrix-dark border-matrix-neon-purple text-matrix-neon-purple",
+  green: "bg-matrix-dark border-matrix-neon-green text-matrix-neon-green",
+  purple: "bg-matrix-dark border-matrix-neon-purple text-matrix-neon-purple",
+  orange: "bg-matrix-dark border-matrix-neon-yellow text-matrix-neon-yellow",
 };
 
 export const StatsCard: React.FC<StatsCardProps> = ({
@@ -27,24 +27,24 @@ export const StatsCard: React.FC<StatsCardProps> = ({
   color = "blue",
 }) => {
   return (
-    <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200 hover:shadow-md transition">
+    <div className="card-matrix border-2 border-matrix-neon-cyan hover:border-matrix-neon-green hover:shadow-matrix transition p-6">
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm font-medium text-gray-600">{title}</p>
-          <p className="text-3xl font-bold text-gray-900 mt-2">{value}</p>
+          <p className="text-sm font-bold text-matrix-neon-cyan font-mono">&gt; {title}</p>
+          <p className="text-3xl font-bold text-matrix-neon-green mt-2 matrix-text">{value}</p>
           {trend && (
             <p
-              className={`text-sm mt-2 ${
-                trend.isPositive ? "text-green-600" : "text-red-600"
+              className={`text-sm mt-2 font-bold font-mono ${
+                trend.isPositive ? "text-matrix-neon-green" : "text-matrix-neon-pink"
               }`}
             >
-              {trend.isPositive ? "▲" : "▼"} {Math.abs(trend.value)}% from last
-              month
+              {trend.isPositive ? "▲" : "▼"} {Math.abs(trend.value)}% TREND
             </p>
           )}
         </div>
         <div
-          className={`p-3 rounded-lg ${colorVariants[color]}`}
+          className={`p-3 rounded-sm border-2 ${colorVariants[color]}`}
+          style={{ boxShadow: '0 0 20px rgba(0, 255, 65, 0.2)' }}
         >
           <Icon className="h-6 w-6" />
         </div>

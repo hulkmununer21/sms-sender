@@ -35,32 +35,39 @@ export const AuthForm: React.FC = () => {
   const displayError = localError || error?.message;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-md">
+    <div className="min-h-screen bg-matrix-black flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Background effect */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-matrix-neon-green rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-matrix-neon-cyan rounded-full blur-3xl"></div>
+      </div>
+
+      <div className="card-matrix-green p-8 w-full max-w-md relative z-10">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">SMS Sender</h1>
-          <p className="text-gray-600 mt-2">Sign in to your account</p>
+          <h1 className="matrix-title text-4xl mb-2">◈◈◈</h1>
+          <h2 className="matrix-title text-3xl">SMS NEXUS</h2>
+          <p className="text-matrix-neon-cyan mt-3 text-sm font-mono">&gt; ACCESS AUTHENTICATION PROTOCOL</p>
         </div>
 
         {/* Error Message */}
         {displayError && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
-            <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+          <div className="mb-6 p-4 border-2 border-matrix-neon-pink rounded-sm bg-matrix-dark flex items-start gap-3">
+            <AlertCircle className="h-5 w-5 text-matrix-neon-pink flex-shrink-0 mt-0.5" />
             <div>
-              <p className="text-sm font-medium text-red-900">Error</p>
-              <p className="text-sm text-red-700 mt-1">{displayError}</p>
+              <p className="text-sm font-bold text-matrix-neon-pink">◈ AUTHENTICATION ERROR</p>
+              <p className="text-sm text-matrix-neon-pink mt-1 font-mono">&gt; {displayError}</p>
             </div>
           </div>
         )}
 
         {/* Info Banner */}
-        <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg flex items-start gap-3">
-          <ShieldAlert className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
+        <div className="mb-6 p-4 border-2 border-matrix-neon-yellow rounded-sm bg-matrix-dark flex items-start gap-3">
+          <ShieldAlert className="h-5 w-5 text-matrix-neon-yellow flex-shrink-0 mt-0.5" />
           <div>
-            <p className="text-sm font-medium text-blue-900">Authorized Users Only</p>
-            <p className="text-xs text-blue-700 mt-1">
-              Contact your administrator to request login credentials. Each account has isolated access to its own data.
+            <p className="text-sm font-bold text-matrix-neon-yellow">◈ SECURE ZONE</p>
+            <p className="text-xs text-matrix-neon-cyan mt-1 font-mono">
+              &gt; AUTHORIZED USERS ONLY. REQUEST CREDENTIALS FROM ADMIN.
             </p>
           </div>
         </div>
@@ -71,19 +78,19 @@ export const AuthForm: React.FC = () => {
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-bold text-matrix-neon-green mb-1 font-mono"
             >
-              Email Address
+              $ EMAIL
             </label>
             <div className="relative">
-              <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+              <Mail className="absolute left-3 top-3 h-5 w-5 text-matrix-neon-green opacity-70" />
               <input
                 type="email"
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                placeholder="user@nexus.sys"
+                className="input-matrix pl-10"
                 disabled={loading}
                 required
               />
@@ -94,19 +101,19 @@ export const AuthForm: React.FC = () => {
           <div>
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-bold text-matrix-neon-green mb-1 font-mono"
             >
-              Password
+              $ PASSWORD
             </label>
             <div className="relative">
-              <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+              <Lock className="absolute left-3 top-3 h-5 w-5 text-matrix-neon-green opacity-70" />
               <input
                 type="password"
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                className="input-matrix pl-10"
                 disabled={loading}
                 required
               />
@@ -117,26 +124,26 @@ export const AuthForm: React.FC = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition flex items-center justify-center gap-2 mt-6"
+            className="btn-matrix-primary w-full py-2 font-bold mt-6 flex items-center justify-center gap-2 uppercase"
           >
             {loading ? (
               <>
                 <Loader className="h-4 w-4 animate-spin" />
-                Signing in...
+                CONNECTING...
               </>
             ) : (
-              <>Sign In</>
+              <>◈ AUTHENTICATE ◈</>
             )}
           </button>
         </form>
 
         {/* Footer */}
-        <div className="mt-8 pt-6 border-t border-gray-200">
-          <p className="text-center text-xs text-gray-500">
-            All user data and activities are completely segregated and isolated per account.
+        <div className="mt-8 pt-6 border-t-2 border-matrix-neon-green">
+          <p className="text-center text-xs text-matrix-neon-cyan font-mono">
+            &gt; DATA ISOLATION: ACTIVE | ENCRYPTION: ON
           </p>
-          <p className="text-center text-xs text-gray-500 mt-2">
-            By signing in, you agree to our Terms of Service and Privacy Policy
+          <p className="text-center text-xs text-matrix-neon-green mt-2 font-mono">
+            &gt; TERMS OF SERVICE ACCEPTED
           </p>
         </div>
       </div>

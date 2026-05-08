@@ -17,8 +17,8 @@ export const DashboardOverview: React.FC = () => {
   if (loading) return <LoadingSpinner fullScreen />;
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-        <p className="text-red-800">Error loading dashboard: {error}</p>
+      <div className="card-matrix border-2 border-matrix-neon-pink p-4">
+        <p className="text-matrix-neon-pink">◈ ERROR: {error}</p>
       </div>
     );
   }
@@ -29,8 +29,8 @@ export const DashboardOverview: React.FC = () => {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-gray-600 mt-2">Welcome back! Here's your SMS campaign overview.</p>
+        <h1 className="matrix-title text-4xl">◈ DASHBOARD ◈</h1>
+        <p className="text-matrix-neon-cyan mt-2 text-sm font-mono">&gt; SMS CAMPAIGN CONTROL NEXUS</p>
       </div>
 
       {/* Stats Grid */}
@@ -66,12 +66,12 @@ export const DashboardOverview: React.FC = () => {
       </div>
 
       {/* Active Campaigns */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-center gap-3">
-        <Activity className="h-5 w-5 text-blue-600" />
+      <div className="card-matrix-cyan p-4 flex items-center gap-3">
+        <Activity className="h-5 w-5 text-matrix-neon-cyan animate-pulse" />
         <div>
-          <p className="font-medium text-blue-900">Active Campaigns</p>
-          <p className="text-sm text-blue-700">
-            {metrics.activeCampaigns} campaign{metrics.activeCampaigns !== 1 ? "s" : ""} running
+          <p className="font-bold text-matrix-neon-cyan matrix-text">◈ ACTIVE CAMPAIGNS ◈</p>
+          <p className="text-sm text-matrix-neon-green font-mono">
+            &gt; {metrics.activeCampaigns} SESSION{metrics.activeCampaigns !== 1 ? "S" : ""} ACTIVE
           </p>
         </div>
       </div>
@@ -79,8 +79,8 @@ export const DashboardOverview: React.FC = () => {
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Messages by Day */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Messages Sent (Last 7 Days)</h2>
+        <div className="card-matrix p-6">
+          <h2 className="text-lg font-bold text-matrix-neon-green mb-4 matrix-text">&gt; TRANSMISSION LOG (7D)</h2>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={metrics.messagesByDay}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
@@ -99,8 +99,8 @@ export const DashboardOverview: React.FC = () => {
         </div>
 
         {/* Campaign Distribution */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Campaign Statistics</h2>
+        <div className="card-matrix-cyan p-6">
+          <h2 className="text-lg font-bold text-matrix-neon-cyan mb-4 matrix-text">&gt; CAMPAIGN ANALYTICS DATA</h2>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart
               data={[
@@ -121,8 +121,8 @@ export const DashboardOverview: React.FC = () => {
       {/* Recent Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Contacts */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Recent Contacts</h2>
+        <div className="card-matrix p-6">
+          <h2 className="text-lg font-bold text-matrix-neon-green mb-4 matrix-text">&gt; RECENT CONTACTS</h2>
           <div className="space-y-3">
             {metrics.recentContacts.length > 0 ? (
               metrics.recentContacts.map((contact) => (
@@ -143,8 +143,8 @@ export const DashboardOverview: React.FC = () => {
         </div>
 
         {/* Recent Campaigns */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Recent Campaigns</h2>
+        <div className="card-matrix-cyan p-6">
+          <h2 className="text-lg font-bold text-matrix-neon-cyan mb-4 matrix-text">&gt; RECENT TRANSMISSIONS</h2>
           <div className="space-y-3">
             {metrics.topCampaigns.length > 0 ? (
               metrics.topCampaigns.map((campaign) => (

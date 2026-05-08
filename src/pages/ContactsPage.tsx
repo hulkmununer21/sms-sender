@@ -1,13 +1,14 @@
 import React, { useState } from "react";
-import { Plus, Search, Trash2, Mail, Download, FileUp, Zap } from "lucide-react";
+import { Plus, Search, Trash2, Mail, Download, FileUp, Zap, ListPlus } from "lucide-react";
 import { useContacts } from "../hooks/useContacts";
 import { LoadingSpinner } from "../components/common/LoadingSpinner";
 import { ErrorAlert } from "../components/common/ErrorAlert";
 import { ValidatedPhoneInput } from "../components/common/ValidatedPhoneInput";
 import { ContactImporter } from "../components/contacts/ContactImporter";
 import { NumberGenerator } from "../components/contacts/NumberGenerator";
+import { BulkPhoneInput } from "../components/contacts/BulkPhoneInput";
 
-type TabType = "list" | "add" | "import" | "generate";
+type TabType = "list" | "add" | "import" | "generate" | "bulk";
 
 export const ContactsPage: React.FC = () => {
   const { contacts, loading, error, addContact, deleteContact } = useContacts();
@@ -145,6 +146,19 @@ export const ContactsPage: React.FC = () => {
               Generate Numbers
             </div>
           </button>
+          <button
+            onClick={() => setActiveTab("bulk")}
+            className={`flex-1 px-4 py-3 font-medium transition ${
+              activeTab === "bulk"
+                ? "bg-blue-50 text-blue-600 border-b-2 border-blue-600"
+                : "text-gray-600 hover:bg-gray-50"
+            }`}
+          >
+            <div className="flex items-center justify-center gap-2">
+              <ListPlus className="h-4 w-4" />
+              Bulk Add
+            </div>
+          </button>
         </div>
 
         {/* Tab Content */}
@@ -262,6 +276,9 @@ export const ContactsPage: React.FC = () => {
 
           {/* Generate Numbers Tab */}
           {activeTab === "generate" && <NumberGenerator />}
+
+          {/* Bulk Add Tab */}
+          {activeTab === "bulk" && <BulkPhoneInput />}
         </div>
       </div>
     </div>
